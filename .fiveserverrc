@@ -1,6 +1,6 @@
 {
   "port": 8080,
   "useLocalIp": true,
-  "remoteLogs": false,
+  "remoteLogs": true,
   "https": true
 }

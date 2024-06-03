@@ -53,20 +53,8 @@ class LeapJSInput {
 
         // Set up Pinch Related Data
         this.pinchSpheres = {};
-        this.pinchSpheres['left'] = new THREE.Mesh(new THREE.SphereGeometry(20, 10, 10), new THREE.MeshPhongMaterial());
-        this.pinchSpheres['left'].material.color.setRGB(0.2, 0.5, 0.5);
-        this.pinchSpheres['left'].name = "Left Pinch Sphere";
-        this.pinchSpheres['left'].visible = false;
-        this.pinchSpheres['left'].layers.set(1);
-        this.pinchSpheres['right'] = new THREE.Mesh(new THREE.SphereGeometry(20, 10, 10), new THREE.MeshPhongMaterial());
-        this.pinchSpheres['right'].material.color.setRGB(0.5, 0.2, 0.2);
-        this.pinchSpheres['right'].name = "Right Pinch Sphere";
-        this.pinchSpheres['right'].visible = false;
-        this.pinchSpheres['right'].layers.set(1);
-        this.world.leftPinch  = this.pinchSpheres['left' ];
-        this.world.rightPinch = this.pinchSpheres['right'];
-        this.world.scene.add(this.pinchSpheres['left']);
-        this.world.scene.add(this.pinchSpheres['right']);
+        this.pinchSpheres['left'] = this.world.leftPinch;
+        this.pinchSpheres['right'] = this.world.rightPinch;
 
         this.ray = new InteractionRay(new THREE.Ray());
         this.lastTimestep = performance.now();

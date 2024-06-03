@@ -68,7 +68,7 @@ class World {
 
         // ground
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2),
-                                   new THREE.MeshStandardMaterial({ color: 0x7f7f7f, depthWrite: false})); //, opacity: 0 
+                                   new THREE.MeshStandardMaterial({ color: 0xffffff, depthWrite: false})); //, opacity: 0 
         this.mesh.rotation.x = - Math.PI / 2;
         //this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
@@ -83,14 +83,14 @@ class World {
         this.scene.add(this.grid);
         
         // light
-        this.light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+        this.light = new THREE.HemisphereLight( 0xffffff, 0x444444, 3.14159 * 0.75 );
         this.light.position.set( 0, 0.2, 0 );
         this.scene.add( this.light );
         this.lightParent = new THREE.Group();
         this.lightTarget = new THREE.Group();
         this.lightParent.frustumCulled = false;
         this.lightParent.add(this.lightTarget);
-        this.light = new THREE.DirectionalLight( 0xffffff );
+        this.light = new THREE.DirectionalLight( 0xffffff, 3.14159 * 0.75 );
         this.light.position.set( 0, 20, 10);
         this.light.castShadow = !this.mobile;
         this.light.frustumCulled = false;
@@ -114,7 +114,9 @@ class World {
         if (navigator.xr) {
             navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
                 if (supported) {
-                    this.container.appendChild(VRButton.createButton(this.renderer));
+                    this.container.appendChild(VRButton.createButton(this.renderer, {
+                        requiredFeatures: [ 'hand-tracking' ]
+                    }));
                     this.renderer.xr.enabled = true;
                 }
             });
@@ -134,6 +136,22 @@ class World {
 
         // pinch controls (initialize at runtime; see LeapHandInput.js)
         this.leftPinch = null, this.rightPinch = null, this.locomotion = null;
+        this.handsAreTracking = true;
+        // Set up Pinch Related Data
+        this.pinchSpheres = {};
+        this.leftPinch = new THREE.Mesh(new THREE.SphereGeometry(20, 10, 10), new THREE.MeshPhongMaterial());
+        this.leftPinch.material.color.setRGB(0.2, 0.5, 0.5);
+        this.leftPinch.name = "Left Pinch Sphere";
+        this.leftPinch.visible = false;
+        this.leftPinch.layers.set(1);
+        this.rightPinch = new THREE.Mesh(new THREE.SphereGeometry(20, 10, 10), new THREE.MeshPhongMaterial());
+        this.rightPinch.material.color.setRGB(0.5, 0.2, 0.2);
+        this.rightPinch.name = "Right Pinch Sphere";
+        this.rightPinch.visible = false;
+        this.rightPinch.layers.set(1);
+        this.scene.add(this.leftPinch);
+        this.scene.add(this.rightPinch);
+
         
         // raycaster
         this.raycaster = new THREE.Raycaster();
@@ -218,7 +236,7 @@ class World {
             this.renderer.render(this.scene, this.camera);
 
             // Also Render the scene to the Canvas if in WebXR
-            if (this.renderer.xr.isPresenting && !this.mobile) {
+            /*if (this.renderer.xr.isPresenting && !this.mobile) {
                 this.renderer.xr.enabled = false;
                 let oldFramebuffer = this.renderer._framebuffer;
                 this.renderer.state.bindXRFramebuffer( null );
@@ -226,7 +244,7 @@ class World {
                 this.renderer.render(this.scene, this.camera);
                 this.renderer.xr.enabled = true;
                 this.renderer.state.bindXRFramebuffer(oldFramebuffer);
-            }
+            }*/
 
             this.now = performance.now();
             ray.lastHovering = ray.hovering;
@@ -251,23 +269,23 @@ class World {
         let rect = this.container.getBoundingClientRect();
         let width = rect.width, height = window.innerHeight - rect.y;
 
-        let oldFramebuffer = this.renderer._framebuffer;
+        /*let oldFramebuffer = this.renderer._framebuffer;
         let oldPresenting = this.renderer.xr.isPresenting;
         if (oldPresenting && !this.mobile) {
             this.renderer.xr.enabled = false;
             this.renderer.state.bindXRFramebuffer( null );
             this.renderer.xr.isPresenting = false;
-        }
+        }*/
 
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
 
-        if (oldPresenting && !this.mobile) {
+        /*if (oldPresenting && !this.mobile) {
             this.renderer.xr.enabled = true;
             this.renderer.state.bindXRFramebuffer(oldFramebuffer);
             this.renderer.xr.isPresenting = oldPresenting;
-        }
+        }*/
 
         this.dirty = true;
     }

@@ -102,9 +102,9 @@ export function querySurface(engine, raycastHit, callback) {
     }
 
     let queryArgs = [raycastHit.object.shapeName, faceID,
-                        raycastHit.uv2.x, raycastHit.uv2.y,
-                        raycastHit.point.x, raycastHit.point.y, raycastHit.point.z,
-                        raycastHit.uvBounds];
+                     raycastHit.uv1.x, raycastHit.uv1.y,
+                     raycastHit.point.x, raycastHit.point.y, raycastHit.point.z,
+                     raycastHit.uvBounds];
 
     // Query the CAD Engine Thread for Info
     engine.execute("SurfaceQuery", BackendFunctions.querySurfaceBackend, queryArgs, callback);
