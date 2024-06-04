@@ -2,8 +2,8 @@ name: LeapShape - Build Site
 
 on:
   push:
-    branches:
-      - main
+    #branches:
+    #  - main
 
 jobs:
   test:
