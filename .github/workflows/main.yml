@@ -2,8 +2,9 @@ name: LeapShape - Build Site
 
 on:
   push:
-    #branches:
-    #  - main
+    branches:
+      - 'main'
+  workflow_dispatch:
 
 jobs:
   test:
