@@ -2,7 +2,7 @@ name: LeapShape - Build Site
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feat-deploy"]
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
