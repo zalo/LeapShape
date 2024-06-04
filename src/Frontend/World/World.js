@@ -136,7 +136,7 @@ class World {
 
         // pinch controls (initialize at runtime; see LeapHandInput.js)
         this.leftPinch = null, this.rightPinch = null, this.locomotion = null;
-        this.handsAreTracking = true;
+        this.handsAreTracking = false;
         // Set up Pinch Related Data
         this.pinchSpheres = {};
         this.leftPinch = new THREE.Mesh(new THREE.SphereGeometry(20, 10, 10), new THREE.MeshPhongMaterial());
