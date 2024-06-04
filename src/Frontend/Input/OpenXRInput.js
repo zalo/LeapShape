@@ -121,8 +121,8 @@ class OpenXRInput {
         if (this.isActive()) {
             if (!this.initialized) { this.initialize(); }
 
-            //this.line1.visible = false;
-            //this.line2.visible = false;
+            this.line1.visible = false;
+            this.line2.visible = false;
 
             // Set Ray Origin and Input Direction
             if (this.mainHand && !this.mainHand   .visible) { this.mainHand = null; this.secondaryHand = null; }
@@ -137,9 +137,9 @@ class OpenXRInput {
                 //this.line1.quaternion.copy(isHand ? this.downTilt : this.identity);
                 //this.line2.quaternion.copy(isHand ? this.  upTilt : this.identity);
 
-                this.world.camera.getWorldPosition  (this.cameraWorldPosition);
-                this.world.camera.getWorldQuaternion(this.cameraWorldQuaternion);
-                this.world.camera.getWorldScale     (this.cameraWorldScale);
+                this.world.camera .getWorldPosition  (this.cameraWorldPosition);
+                this.world.camera .getWorldQuaternion(this.cameraWorldQuaternion);
+                this.world.cameraParent.getWorldScale(this.cameraWorldScale);
 
                 // Use default ray from OS - Sucks, don't do it!
                 //if(!isHand){
@@ -148,9 +148,21 @@ class OpenXRInput {
                 //}
 
                 if (this.world.leftPinch && this.world.rightPinch){
-                    this.world.leftPinch.position.multiplyScalar(3.0).add(this.hand1.joints['thumb-tip'].getWorldPosition(this.vec)).divideScalar(4.0);
+                    let oneLeft = this.handModel1.xrInputSource.handedness == "left";
+                    let mainLeft = (this.mainHand == this.controller1 ? 
+                        this.handModel1.xrInputSource.handedness : 
+                        this.handModel2.xrInputSource.handedness) == "left";
+
+                    if(oneLeft){ this.vec.set(0.01, -0.06, -0.08); }else{ this.vec.set(-0.01, -0.06, -0.08); }
+                    this.world.leftPinch.position.multiplyScalar(1.0)
+                        .add(this.vec.applyMatrix4(this.hand1.joints['index-finger-metacarpal'].matrixWorld))
+                        .divideScalar(2.0);
                     this.world.leftPinch. visible = this.controller1.inputState.pinching;
-                    this.world.rightPinch.position.multiplyScalar(3.0).add(this.hand2.joints['thumb-tip'].getWorldPosition(this.vec)).divideScalar(4.0);
+
+                    if(!oneLeft){ this.vec.set(0.01, -0.06, -0.08); }else{ this.vec.set(-0.01, -0.06, -0.08); }
+                    this.world.rightPinch.position.multiplyScalar(1.0)
+                        .add(this.vec.applyMatrix4(this.hand2.joints['index-finger-metacarpal'].matrixWorld))
+                        .divideScalar(2.0);
                     this.world.rightPinch.visible = this.controller2.inputState.pinching;
 
                     //if(isHand){
@@ -161,9 +173,6 @@ class OpenXRInput {
                             this.vec2.set(0, 0, -1).applyQuaternion(this.cameraWorldQuaternion).y = 0;
                             this.quat.setFromUnitVectors(this.vec3.set(0, 0, 1), this.vec2.normalize());
                             // Place Projection origin points roughly where the shoulders are
-                            let mainLeft = (this.mainHand == this.controller1 ? 
-                                this.handModel1.xrInputSource.handedness : 
-                                this.handModel2.xrInputSource.handedness) == "left";
                             this.vec2.set(mainLeft ? 0.15 : -0.15, 0.05, -0.05)
                                 .multiplyScalar(this.cameraWorldScale.x).applyQuaternion(this.quat);
                                 
@@ -173,7 +182,8 @@ class OpenXRInput {
                             //curLine.setWorldRotation(new THREE.Quaternion().setFromUnitVectors(this.vec3.set(0, 0, 1), this.ray.ray.direction));
                             //curSphere.add(curLine);
                             curLine.position.copy(curSphere.position);
-                            curLine.quaternion.setFromUnitVectors(this.vec3.set(0, 0, -1), this.ray.ray.direction);
+                            curLine.quaternion.setFromUnitVectors(this.vec3.set(0, 0, -1.0), this.ray.ray.direction);
+                            curLine.scale.set(5.0 * this.cameraWorldScale.x, 5.0 * this.cameraWorldScale.x, 5.0 * this.cameraWorldScale.x);
                         }
                     //}
                 }
