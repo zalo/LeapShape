@@ -113,6 +113,7 @@ class OpenXRInput {
         this.line2 = line.clone(); this.world.scene.add(this.line2); this.controller2.line = this.line2;
         this.hoverColor = new THREE.Color(0, 1, 1);
         this.idleColor  = new THREE.Color(0.5, 0.5, 0.5);
+
         this.initialized = true;
     }
 
