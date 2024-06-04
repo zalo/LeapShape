@@ -48,9 +48,9 @@ class Input {
     constructor(world) {
         // Add your new input abstraction here!
         this.inputs = {
+            openxr: new OpenXRInput(world, this),
             mouse : new MouseInput (world, this),
             hands : new LeapJSInput(world, this),
-            openxr: new OpenXRInput(world, this)
         };
         this.activeInput = this.inputs.mouse;
         this.ray = new InteractionRay(new THREE.Ray());
