@@ -68,9 +68,8 @@ class LeapShapeEngineWorker {
     execute(payload) {
         // Cache Backend Execution Functions to save on memory
         if (!(payload.shapeFunction in this.backendFunctions)) {
-            this.safari = /(Safari|iPhone)/g.test(navigator.userAgent) && ! /(Chrome)/g.test(navigator.userAgent);
             this.backendFunctions[payload.shapeFunction] =
-                new Function("return " + (this.safari ? "" : "function ") + payload.shapeFunction)().bind(this);
+                new Function("return function " + payload.shapeFunction)().bind(this);
         }
         let op = this.backendFunctions[payload.shapeFunction];
         

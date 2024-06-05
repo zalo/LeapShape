@@ -83,8 +83,8 @@ class OpenXRInput {
         this.hand2 = this.world.renderer.xr.getHand(1);
         this.hand1.userData.currentHandModel = 0;
         this.hand2.userData.currentHandModel = 0;
-        this.hand1.inputState = { pinching: false };
-        this.hand2.inputState = { pinching: false };
+        //this.hand1.inputState = { pinching: false };
+        //this.hand2.inputState = { pinching: false };
         this.handModel1 = this.handModelFactory.createHandModel(this.hand1, 'mesh');
         this.handModel2 = this.handModelFactory.createHandModel(this.hand2, 'mesh');
         this.hand1.add (this.handModel1);  this.hand2.add (this.handModel2);
@@ -95,10 +95,10 @@ class OpenXRInput {
         this.hand2.traverse((element) => { if(element.layers){ element.layers.set(1); }});
     
         // Controller Interaction
-        this.hand1.addEventListener('pinchstart', (e) => { this.hand1.inputState.pinching = true ; });
-        this.hand1.addEventListener('pinchend'  , (e) => { this.hand1.inputState.pinching = false; });
-        this.hand2.addEventListener('pinchstart', (e) => { this.hand2.inputState.pinching = true ; });
-        this.hand2.addEventListener('pinchend'  , (e) => { this.hand2.inputState.pinching = false; });
+        this.hand1.addEventListener('pinchstart', (e) => { this.controller1.inputState.pinching = true ; });
+        this.hand1.addEventListener('pinchend'  , (e) => { this.controller1.inputState.pinching = false; });
+        this.hand2.addEventListener('pinchstart', (e) => { this.controller2.inputState.pinching = true ; });
+        this.hand2.addEventListener('pinchend'  , (e) => { this.controller2.inputState.pinching = false; });
 
         // Pointer
         let lineGeometry = new THREE.BufferGeometry().setFromPoints(
